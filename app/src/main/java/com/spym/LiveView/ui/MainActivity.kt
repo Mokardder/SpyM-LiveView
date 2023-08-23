@@ -9,8 +9,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.codewithkael.firebasevideocall.databinding.ActivityMainBinding
+
 import com.spym.LiveView.adapters.MainRecyclerViewAdapter
+import com.spym.LiveView.databinding.ActivityMainBinding
 import com.spym.LiveView.repository.MainRepository
 import com.spym.LiveView.service.MainService
 import com.spym.LiveView.service.MainServiceRepository

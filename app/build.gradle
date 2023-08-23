@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.codewithkael.firebasevideocall'
+    namespace 'com.spym.LiveView'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.codewithkael.firebasevideocall"
+        applicationId "com.spym.LiveView"
         minSdk 24
         targetSdk 33
         versionCode 1

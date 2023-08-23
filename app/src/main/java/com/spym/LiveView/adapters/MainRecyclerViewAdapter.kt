@@ -4,8 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.codewithkael.firebasevideocall.R
-import com.codewithkael.firebasevideocall.databinding.ItemMainRecyclerViewBinding
+import com.spym.LiveView.R
+import com.spym.LiveView.databinding.ItemMainRecyclerViewBinding
+
 
 class MainRecyclerViewAdapter(private val listener:Listener) : RecyclerView.Adapter<MainRecyclerViewAdapter.MainRecyclerViewHolder>() {
 

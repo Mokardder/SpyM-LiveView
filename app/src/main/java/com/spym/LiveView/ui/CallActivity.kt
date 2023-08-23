@@ -11,8 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.codewithkael.firebasevideocall.R
-import com.codewithkael.firebasevideocall.databinding.ActivityCallBinding
+import com.spym.LiveView.R
+import com.spym.LiveView.databinding.ActivityCallBinding
 
 
 import com.spym.LiveView.service.MainService
