@@ -174,12 +174,10 @@ class CallActivity : AppCompatActivity(), MainService.EndCallListener {
                     serviceRepository.toggleAudio(true)
                     //2. update ui to mic is muted
                     toggleMicrophoneButton.setImageResource(R.drawable.ic_mic_on)
-                    Toast.makeText(this@CallActivity, "Muted", Toast.LENGTH_SHORT).show()
                 }else{
                     //we should set it back to normal
                     //1. send a command to repository to make it back to normal status
 //                    serviceRepository.toggleAudio(false)
-                    Toast.makeText(this@CallActivity, "Muted", Toast.LENGTH_SHORT).show()
                     //2. update ui
                     toggleMicrophoneButton.setImageResource(R.drawable.ic_mic_off)
                 }
