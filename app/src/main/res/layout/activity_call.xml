@@ -10,8 +10,8 @@
         android:id="@+id/remoteView"/>
 
     <org.webrtc.SurfaceViewRenderer
-        android:layout_width="100dp"
-        android:layout_height="150dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:id="@+id/localView"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
@@ -53,7 +53,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="0dp"
         android:orientation="horizontal"
         android:gravity="center"
         android:background="@color/faded_black"
