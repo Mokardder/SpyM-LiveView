@@ -1,7 +1,7 @@
 package com.spym.LiveView.utils
 
 enum class DataModelType {
-    StartAudioCall,StartVideoCall,Offer,Answer,IceCandidates,EndCall,ChangeToBack,StartFront,StartBack
+    StartAudioCall,StartVideoCall,Offer,Answer,IceCandidates,EndCall,StartFront,StartBack
 }
 data class DataModel(
     val sender:String?=null,

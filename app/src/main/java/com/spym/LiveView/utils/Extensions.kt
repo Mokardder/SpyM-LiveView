@@ -19,9 +19,16 @@ fun AppCompatActivity.getCameraAndMicPermission(success:()->Unit){
 }
 
 fun Int.convertToHumanTime() : String{
-    val seconds = this%60
-    val minutes = this/60
-    val secondsString = if (seconds<10) "0$seconds" else "$seconds"
-    val minutesString = if (minutes < 10) "0$minutes" else "$minutes"
-    return "$minutesString:$secondsString"
-}
+
+        val hours = this / 3600
+        val minutes = (this % 3600) / 60
+        val seconds = this % 60
+
+        return if (hours > 0) {
+            String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            String.format("%02d:%02d", minutes, seconds)
+        }
+    }
+
+

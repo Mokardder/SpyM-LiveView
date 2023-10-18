@@ -1,10 +1,18 @@
 package com.spym.LiveView.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.spym.LiveView.R
 import com.spym.LiveView.databinding.ActivityCallBinding
+import com.spym.LiveView.repository.MainRepository
 
 
 import com.spym.LiveView.service.MainService
@@ -21,23 +30,30 @@ import com.spym.LiveView.utils.convertToHumanTime
 import com.spym.LiveView.webrtc.RTCAudioManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import org.webrtc.PeerConnection
+import org.webrtc.PeerConnection.PeerConnectionState
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CallActivity : AppCompatActivity(), MainService.EndCallListener {
+class CallActivity : AppCompatActivity(), MainRepository.rtcListener, MainService.EndCallListener {
 
     private var target:String?=null
     private var isVideoCall:Boolean= true
     private var isCaller:Boolean = true
 
-    private var isMicrophoneMuted = false
-    private var isCameraMuted = false
+    private var listen: MainRepository.rtcListener? = null
+
+
+    private var isMicrophoneMuted = true
+    private var isCameraMuted = true
     private var isSpeakerMode = true
     private var isScreenCasting = false
 
 
     @Inject lateinit var serviceRepository: MainServiceRepository
+    @Inject lateinit var mainRepository: MainRepository
     private lateinit var requestScreenCaptureLauncher:ActivityResultLauncher<Intent>
+
 
     private lateinit var views: ActivityCallBinding
 
@@ -60,6 +76,12 @@ class CallActivity : AppCompatActivity(), MainService.EndCallListener {
         super.onCreate(savedInstanceState)
         views = ActivityCallBinding.inflate(layoutInflater)
         setContentView(views.root)
+
+
+
+
+
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         init()
 
     }
@@ -75,7 +97,7 @@ class CallActivity : AppCompatActivity(), MainService.EndCallListener {
         isCaller = intent.getBooleanExtra("isCaller",true)
 
         views.apply {
-            callTitleTv.text = "In call with $target"
+            callNameTv.text = "$target"
             CoroutineScope(Dispatchers.IO).launch {
                 for (i in 0..3600){
                     delay(1000)
@@ -104,12 +126,22 @@ class CallActivity : AppCompatActivity(), MainService.EndCallListener {
                 serviceRepository.switchCamera()
             }
         }
-        setupMicToggleClicked()
+
+        serviceRepository.toggleAudio(true)
+        serviceRepository.toggleVideo(true)
+//        setupMicToggleClicked()
 
         setupCameraToggleClicked()
         setupToggleAudioDevice()
         setupScreenCasting()
+
+
+
+
+
+     mainRepository.rtcListen = this
         MainService.endCallListener = this
+
     }
 
     private fun setupScreenCasting() {
@@ -227,6 +259,28 @@ class CallActivity : AppCompatActivity(), MainService.EndCallListener {
         }
     }
 
+
+
+    override fun onChangeCallState(callState: PeerConnectionState?) {
+        runOnUiThread{
+            views.apply {
+                connectionTv.text = "$callState"
+
+                if (callState == PeerConnection.PeerConnectionState.CONNECTED){
+                    Thread.sleep(3000)
+                    connectionTv.text = "";
+
+                }
+
+
+            }
+        }
+
+    }
+
+
+
+
     override fun onCallEnded() {
         finish()
     }
@@ -240,4 +294,10 @@ class CallActivity : AppCompatActivity(), MainService.EndCallListener {
         MainService.localSurfaceView =null
 
     }
+
+
+
+
+
+
 }

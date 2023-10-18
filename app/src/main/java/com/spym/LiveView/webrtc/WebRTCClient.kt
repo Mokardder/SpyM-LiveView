@@ -38,6 +38,8 @@ class WebRTCClient @Inject constructor(
     private val mediaConstraint = MediaConstraints().apply {
         mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo","true"))
         mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio","true"))
+        optional.add(MediaConstraints.KeyValuePair("googCpuOveruseDetection", "false"))
+
     }
 
     //call variables
@@ -113,7 +115,9 @@ class WebRTCClient @Inject constructor(
     }
 
     fun answer(target:String){
+        Log.d("Mokardder===>", "In Answer Sending Function (WebRTCClient.kt:116) To $target")
         peerConnection?.createAnswer(object : MySdpObserver() {
+
             override fun onCreateSuccess(desc: SessionDescription?) {
                 super.onCreateSuccess(desc)
                 peerConnection?.setLocalDescription(object : MySdpObserver() {
@@ -128,13 +132,26 @@ class WebRTCClient @Inject constructor(
                             face = DataModelType.StartFront
                                 )
                         )
+                        Log.d("Mokardder===>", "Answer Sent to $target")
+                    }
+
+                    override fun onSetFailure(p0: String?) {
+                        Log.d("Mokardder===>", "Failed to set $p0")
+                        super.onSetFailure(p0)
                     }
                 },desc)
+            }
+
+            override fun onCreateFailure(p0: String?) {
+                Log.d("Mokardder===>", "Failed to create $p0")
+                super.onCreateFailure(p0)
             }
         },mediaConstraint)
     }
 
     fun onRemoteSessionReceived(sessionDescription: SessionDescription){
+
+        Log.d("Mokardder===>", "Saving offer as SSD")
         peerConnection?.setRemoteDescription(MySdpObserver(),sessionDescription)
     }
 

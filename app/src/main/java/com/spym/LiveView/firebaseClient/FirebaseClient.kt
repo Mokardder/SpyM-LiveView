@@ -100,9 +100,12 @@ class FirebaseClient @Inject constructor(
     }
 
     fun sendMessageToOtherClient(message:DataModel, success:(Boolean) -> Unit){
+
+
+
+
         val convertedMessage = gson.toJson(message.copy(sender = currentUsername))
 
-        Log.d("Mokardder ==>", "sendMessageToOtherClient: $convertedMessage")
         dbRef.child(message.target).child(LATEST_EVENT).setValue(convertedMessage)
             .addOnCompleteListener {
                 success(true)

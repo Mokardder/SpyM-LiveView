@@ -1,14 +1,22 @@
 package com.spym.LiveView.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Camera
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.spym.LiveView.R
 
 import com.spym.LiveView.adapters.MainRecyclerViewAdapter
 import com.spym.LiveView.databinding.ActivityMainBinding
@@ -24,11 +32,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainRecyclerViewAdapter.Listener, MainService.Listener {
     private val TAG = "MainActivity"
+    private val mCamera: Camera? =null
 
     private lateinit var views: ActivityMainBinding
     var username: String? = null
-    private var isFront: Boolean? = true
-    private var isSelected: Boolean? = false
+
 
     @Inject
     lateinit var mainRepository: MainRepository
@@ -41,6 +49,7 @@ class MainActivity : AppCompatActivity(), MainRecyclerViewAdapter.Listener, Main
         super.onCreate(savedInstanceState)
         views = ActivityMainBinding.inflate(layoutInflater)
         setContentView(views.root)
+
         init()
     }
 
@@ -76,6 +85,11 @@ class MainActivity : AppCompatActivity(), MainRecyclerViewAdapter.Listener, Main
     }
 
     override fun onVideoCallClicked(username: String) {
+
+
+        if (!isCameraReleased()){
+            showCustomToast(this, "Camera in Use", R.drawable.baseline_camera_24)
+        }
 
 
         showCameraSelectionDialog(username)
@@ -193,5 +207,30 @@ class MainActivity : AppCompatActivity(), MainRecyclerViewAdapter.Listener, Main
         }
 
 
+    }
+    fun isCameraOnMainThread(): Boolean {
+        return Looper.myLooper() == Looper.getMainLooper()
+    }
+    fun showCustomToast(context: Context, message: String, iconResId: Int) {
+        // Inflate the custom layout
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layout = inflater.inflate(R.layout.toast_layout, null)
+
+        // Customize the toast layout components
+        val icon = layout.findViewById<ImageView>(R.id.custom_toast_icon)
+        icon.setImageResource(iconResId)
+
+        val text = layout.findViewById<TextView>(R.id.custom_toast_text)
+        text.text = message
+
+        // Create and show the custom toast
+        val toast = Toast(context)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.setGravity(Gravity.BOTTOM, 0, 0)
+        toast.show()
+    }
+    fun isCameraReleased(): Boolean {
+            return mCamera == null;
     }
 }

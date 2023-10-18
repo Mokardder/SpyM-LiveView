@@ -17,14 +17,8 @@
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@id/controlPanelLayout"
         app:layout_constraintEnd_toEndOf="parent"/>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@color/faded_black"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/titleLayout">
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,8 +28,20 @@
             android:textColor="@color/white"
             android:padding="10dp"
             android:id="@+id/callTimerTv"
-            android:text="00:01"
-            app:drawableStartCompat="@drawable/ic_record" />
+            android:text=""
+             />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="14sp"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:id="@+id/connectionTv"
+        android:text="INITIALIZING..."
+         />
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,13 +52,13 @@
             android:textSize="15sp"
             android:textColor="@color/white"
             android:padding="10dp"
-            android:id="@+id/callTitleTv"
-            android:text="Video Call With Masoud"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:id="@+id/callNameTv"
+            android:text=""/>
+
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:gravity="center"

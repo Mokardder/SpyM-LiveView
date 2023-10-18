@@ -21,7 +21,10 @@ class MainRepository @Inject constructor(
 
     private var target: String? = null
     var listener: Listener? = null
+
     private var remoteView:SurfaceViewRenderer?=null
+    var rtcListen: rtcListener? = null
+
 
     fun login(username: String, password: String, isDone: (Boolean, String?) -> Unit) {
         firebaseClient.login(username, password, isDone)
@@ -66,9 +69,6 @@ class MainRepository @Inject constructor(
                     EndCall->{
                         listener?.endCall()
                     }
-                    ChangeToBack->{
-                        listener?.ChangeToBack()
-                    }
                     else -> Unit
                 }
             }
@@ -81,7 +81,7 @@ class MainRepository @Inject constructor(
             DataModel(
                 type = if (isVideoCall) StartVideoCall else StartAudioCall,
                 target = target,
-                face = if (isFront == true) StartFront else StartBack
+                face = if (isFront) StartFront else StartBack
             ), success
         )
     }
@@ -93,7 +93,12 @@ class MainRepository @Inject constructor(
     interface Listener {
         fun onLatestEventReceived(data: DataModel)
         fun endCall()
-        fun ChangeToBack()
+
+
+
+    }
+    interface rtcListener {
+        fun onChangeCallState(callState: PeerConnection.PeerConnectionState?)
     }
 
     fun initWebrtcClient(username: String) {
@@ -118,7 +123,11 @@ class MainRepository @Inject constructor(
             }
 
             override fun onConnectionChange(newState: PeerConnection.PeerConnectionState?) {
+                rtcListen?.onChangeCallState(newState)
                 super.onConnectionChange(newState)
+
+
+
                 if (newState == PeerConnection.PeerConnectionState.CONNECTED) {
                     // 1. change my status to in call
                     changeMyStatus(UserStatus.IN_CALL)
@@ -145,11 +154,13 @@ class MainRepository @Inject constructor(
     fun endCall() {
         webRTCClient.closeConnection()
         changeMyStatus(UserStatus.ONLINE)
+        firebaseClient.clearLatestEvent()
     }
 
 
 
     fun sendEndCall() {
+
         onTransferEventToSocket(
             DataModel(
                 type = EndCall,
@@ -160,15 +171,7 @@ class MainRepository @Inject constructor(
         )
     }
 
-    fun sendSwitchCamera() {
-        onTransferEventToSocket(
-            DataModel(
-                type = ChangeToBack,
-                target = target!!,
-                face = StartFront
-            )
-        )
-    }
+
 
     private fun changeMyStatus(status: UserStatus) {
         firebaseClient.changeMyStatus(status)

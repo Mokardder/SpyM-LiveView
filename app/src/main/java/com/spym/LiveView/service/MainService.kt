@@ -10,6 +10,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.spym.LiveView.R
+import com.spym.LiveView.firebaseClient.FirebaseClient
 
 import com.spym.LiveView.repository.MainRepository
 import com.spym.LiveView.service.MainServiceActions.*
@@ -31,7 +32,6 @@ class MainService : Service(), MainRepository.Listener {
 
     @Inject
     lateinit var mainRepository: MainRepository
-
     private lateinit var notificationManager: NotificationManager
     private lateinit var rtcAudioManager: RTCAudioManager
     private var isPreviousCallStateVideo = true
@@ -66,7 +66,7 @@ class MainService : Service(), MainRepository.Listener {
                 TOGGLE_AUDIO_DEVICE.name -> handleToggleAudioDevice(incomingIntent)
                 TOGGLE_SCREEN_SHARE.name -> handleToggleScreenShare(incomingIntent)
                 STOP_SERVICE.name -> handleStopService()
-                SEND_SWITCH_CAMERA.name -> handleSendSwitchCamera()
+
                 else -> Unit
             }
         }
@@ -136,16 +136,13 @@ class MainService : Service(), MainRepository.Listener {
 
 
     private fun handleEndCall() {
+
         //1. we have to send a signal to other peer that call is ended
         mainRepository.sendEndCall()
         //2.end out call process and restart our webrtc client
         endCallAndRestartRepository()
     }
-        private fun handleSendSwitchCamera() {
-        //1. Sending to Switch Camera
-        mainRepository.sendSwitchCamera()
 
-    }
 
 
     private fun endCallAndRestartRepository(){
@@ -233,9 +230,7 @@ class MainService : Service(), MainRepository.Listener {
         endCallAndRestartRepository()
     }
 
-    override fun ChangeToBack() {
-        TODO("Not yet implemented")
-    }
+
 
 
     interface Listener {
